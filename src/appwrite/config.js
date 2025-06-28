@@ -1,5 +1,5 @@
 import conf from "../conf/conf.js";
-import { Client,Databases,Storage,Query, ID } from "appwrite";
+import { Client,Databases,Storage,Query, ID ,Permission,Role} from "appwrite";
 
 export class Service{
     client=new Client();
@@ -84,7 +84,10 @@ export class Service{
             return await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
+                 [
+      Permission.read(Role.any()), // ✅ Allow public to read
+    ]
             )
         }
         catch (error) {
@@ -106,8 +109,8 @@ export class Service{
         }
     }
 
-    getFilePreview(fileId){
-        return this.bucket.getFilePreview(
+    getFileView(fileId){
+        return this.bucket.getFileView(
             conf.appwriteBucketId,
             fileId
         );
